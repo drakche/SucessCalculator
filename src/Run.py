@@ -3,7 +3,7 @@ Created on Jun 28, 2011
 
 @author: drakChe
 '''
-from GUI_V2 import MainFrame
+from GUI_V3 import MainFrame
 import wx
 
 from wx._misc import DateTime
