@@ -21,21 +21,31 @@ class GUIOverride(MainFrame):
     def __init__(self, parent):
         MainFrame.__init__(self, parent)
         
+        
+        
+        self.activeYear = self.tabNotebook.GetSelection()
+        self.selectedItem = -1
         self.list = [[],[],[],[]]
         
     def UnselectList(self):
-        self.listGradesFirst.Select(-1, None)
-        self.listGradesSecond.Select(-1, None)
-        self.listGradesThird.Select(-1, None)
-        self.listGradesFourth.Select(-1, None)
+        self.listGradesFirst.Select(-1)
+        self.listGradesSecond.Select(-1)
+        self.listGradesThird.Select(-1)
+        self.listGradesFourth.Select(-1)
     
     def btnCancel_OnButtonClick(self, event):
+        
+        self.ClearFields()
+        
+    def ClearFields(self):
         self.txtSubject.Value = ''
         self.datDatum.Value = DateTime.Now()
         self.spinGrade.Value = 0
         self.UnselectList()
+        self.btnDelete.Disable()
         
     def tabNotebookOnNotebookPageChanged(self, event):
+        self.activeYear = self.tabNotebook.GetSelection()
         self.UnselectList()
         event.Skip()
     
@@ -45,19 +55,40 @@ class GUIOverride(MainFrame):
         ex.Grade = self.spinGrade.Value
         ex.Date = self.datDatum.Value
         
-        activeYear = self.tabNotebook.GetSelection()       
-        self.list[activeYear].append(ex)             
-        self.tabNotebook.GetPage(activeYear).GetChildren()[0].Append(self.list[activeYear])
-        self.UnselectList()
+        
+        
+        exist = False
+        
+        for e in self.list[self.activeYear]:
+            if not exist:
+                if e.Subject == ex.Subject:
+                    exist = True
+         
+        if not exist:
+            self.list[self.activeYear].append(ex)            
+            self.tabNotebook.GetPage(self.activeYear).GetChildren()[0].Append(str(ex),ex)
+            
+        else:
+            wx.MessageBox('Uneseni ispit posoji, molimo ispravite','Info')                                
+        
+        self.ClearFields()
+        
         
     def ListGradesFirst_OnListItemSelected(self, event):
-        id = event.GetSelection()
-        activeYear = self.tabNotebook.GetSelection()
-        item = self.list[activeYear][id]
+        self.selectedItem = event.GetSelection()
+        
+        item = self.list[self.activeYear][self.selectedItem]
         self.txtSubject.Value = item.Subject
         self.spinGrade.Value = item.Grade
-        self.datDatum.Value = item.Date        
-
+        self.datDatum.Value = item.Date 
+        self.btnDelete.Enable()
+        
+    def btnDelete_OnButtonClick(self, event):
+        self.list[self.activeYear].pop(self.selectedItem)
+        self.tabNotebook.GetPage(self.activeYear).GetChildren()[0].Delete(self.selectedItem)
+        self.ClearFields()
+        
+        
 if __name__ == '__main__':
     a = wx.App()
     GUIOverride(None).Show()

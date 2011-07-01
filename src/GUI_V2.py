@@ -30,10 +30,11 @@ class MainFrame ( wx.Frame ):
 		self.PanelFirstYear = wx.Panel( self.tabNotebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL, u"FirstYear" )
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.listGradesFirst = wx.ListCtrl( self.PanelFirstYear, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_LIST )
+		listGradesFirstChoices = []
+		self.listGradesFirst = wx.ListBox( self.PanelFirstYear, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listGradesFirstChoices, 0 )
 		bSizer3.Add( self.listGradesFirst, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.m_staticText17 = wx.StaticText( self.PanelFirstYear, wx.ID_ANY, u"Prosek:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText17 = wx.StaticText( self.PanelFirstYear, wx.ID_ANY, u"Prosek (ESBP):", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText17.Wrap( -1 )
 		bSizer3.Add( self.m_staticText17, 0, wx.ALL, 5 )
 		
@@ -51,10 +52,11 @@ class MainFrame ( wx.Frame ):
 		self.PanelSecondYear = wx.Panel( self.tabNotebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer31 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.listGradesSecond = wx.ListCtrl( self.PanelSecondYear, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_LIST )
+		listGradesSecondChoices = []
+		self.listGradesSecond = wx.ListBox( self.PanelSecondYear, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listGradesSecondChoices, 0 )
 		bSizer31.Add( self.listGradesSecond, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.m_staticText171 = wx.StaticText( self.PanelSecondYear, wx.ID_ANY, u"Prosek:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText171 = wx.StaticText( self.PanelSecondYear, wx.ID_ANY, u"Prosek (ESBP):", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText171.Wrap( -1 )
 		bSizer31.Add( self.m_staticText171, 0, wx.ALL, 5 )
 		
@@ -72,10 +74,11 @@ class MainFrame ( wx.Frame ):
 		self.PanelThirdYear = wx.Panel( self.tabNotebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer32 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.listGradesThird = wx.ListCtrl( self.PanelThirdYear, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_LIST )
+		listGradesThirdChoices = []
+		self.listGradesThird = wx.ListBox( self.PanelThirdYear, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listGradesThirdChoices, 0 )
 		bSizer32.Add( self.listGradesThird, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.m_staticText172 = wx.StaticText( self.PanelThirdYear, wx.ID_ANY, u"Prosek:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText172 = wx.StaticText( self.PanelThirdYear, wx.ID_ANY, u"Prosek (ESBP):", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText172.Wrap( -1 )
 		bSizer32.Add( self.m_staticText172, 0, wx.ALL, 5 )
 		
@@ -93,10 +96,11 @@ class MainFrame ( wx.Frame ):
 		self.PanelFourthYear = wx.Panel( self.tabNotebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer33 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.listGradesFourth = wx.ListCtrl( self.PanelFourthYear, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_LIST )
+		listGradesFourthChoices = []
+		self.listGradesFourth = wx.ListBox( self.PanelFourthYear, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listGradesFourthChoices, 0 )
 		bSizer33.Add( self.listGradesFourth, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.m_staticText173 = wx.StaticText( self.PanelFourthYear, wx.ID_ANY, u"Prosek:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText173 = wx.StaticText( self.PanelFourthYear, wx.ID_ANY, u"Prosek (ESBP):", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText173.Wrap( -1 )
 		bSizer33.Add( self.m_staticText173, 0, wx.ALL, 5 )
 		
@@ -147,7 +151,7 @@ class MainFrame ( wx.Frame ):
 		self.m_staticText9.Wrap( -1 )
 		fgSizer1.Add( self.m_staticText9, 0, wx.ALL, 5 )
 		
-		self.datDatum = wx.DatePickerCtrl( self.m_panel51, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition, wx.DefaultSize, wx.DP_DEFAULT )
+		self.datDatum = wx.DatePickerCtrl( self.m_panel51, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition, wx.DefaultSize, wx.DP_DEFAULT|wx.DP_DROPDOWN )
 		fgSizer1.Add( self.datDatum, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		bSizer27.Add( fgSizer1, 0, wx.EXPAND|wx.ALIGN_RIGHT, 5 )
@@ -156,15 +160,32 @@ class MainFrame ( wx.Frame ):
 		
 		bSizer26 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.btnDelete = wx.Button( self.m_panel51, wx.ID_ANY, u"&Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btnDelete = wx.BitmapButton( self.m_panel51, wx.ID_ANY, wx.Bitmap( u"Icons/trash.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
+		
+		self.btnDelete.SetBitmapDisabled( wx.Bitmap( u"Icons/trash.png", wx.BITMAP_TYPE_ANY ) )
+		self.btnDelete.SetBitmapSelected( wx.Bitmap( u"Icons/trash.png", wx.BITMAP_TYPE_ANY ) )
+		self.btnDelete.SetBitmapFocus( wx.Bitmap( u"Icons/trash.png", wx.BITMAP_TYPE_ANY ) )
+		self.btnDelete.SetBitmapHover( wx.Bitmap( u"Icons/trash.png", wx.BITMAP_TYPE_ANY ) )
+		self.btnDelete.Enable( False )
+		
 		self.btnDelete.Enable( False )
 		
 		bSizer26.Add( self.btnDelete, 0, wx.ALL, 5 )
 		
-		self.btnCancel = wx.Button( self.m_panel51, wx.ID_ANY, u"&Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer26.Add( self.btnCancel, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
+		self.btnCancel = wx.BitmapButton( self.m_panel51, wx.ID_ANY, wx.Bitmap( u"Icons/cancel.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
 		
-		self.btnAdd = wx.Button( self.m_panel51, wx.ID_ANY, u"&Add grade", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btnCancel.SetBitmapDisabled( wx.Bitmap( u"Icons/cancel.png", wx.BITMAP_TYPE_ANY ) )
+		self.btnCancel.SetBitmapSelected( wx.Bitmap( u"Icons/cancel.png", wx.BITMAP_TYPE_ANY ) )
+		self.btnCancel.SetBitmapFocus( wx.Bitmap( u"Icons/cancel.png", wx.BITMAP_TYPE_ANY ) )
+		self.btnCancel.SetBitmapHover( wx.Bitmap( u"Icons/cancel.png", wx.BITMAP_TYPE_ANY ) )
+		bSizer26.Add( self.btnCancel, 0, wx.ALL, 5 )
+		
+		self.btnAdd = wx.BitmapButton( self.m_panel51, wx.ID_ANY, wx.Bitmap( u"Icons/doc_plus.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW )
+		
+		self.btnAdd.SetBitmapDisabled( wx.Bitmap( u"Icons/doc_plus.png", wx.BITMAP_TYPE_ANY ) )
+		self.btnAdd.SetBitmapSelected( wx.Bitmap( u"Icons/doc_plus.png", wx.BITMAP_TYPE_ANY ) )
+		self.btnAdd.SetBitmapFocus( wx.Bitmap( u"Icons/doc_plus.png", wx.BITMAP_TYPE_ANY ) )
+		self.btnAdd.SetBitmapHover( wx.Bitmap( u"Icons/doc_plus.png", wx.BITMAP_TYPE_ANY ) )
 		bSizer26.Add( self.btnAdd, 0, wx.ALL, 5 )
 		
 		bSizer9.Add( bSizer26, 0, wx.ALIGN_RIGHT, 5 )
@@ -182,20 +203,24 @@ class MainFrame ( wx.Frame ):
 		self.menuMain = wx.MenuBar( 0 )
 		self.menuFile = wx.Menu()
 		self.mItemLoad = wx.MenuItem( self.menuFile, wx.ID_OPEN, u"U&citaj"+ u"\t" + u"Ctrl+O", wx.EmptyString, wx.ITEM_NORMAL )
+		self.mItemLoad.SetBitmap( wx.Bitmap( u"Icons/download.png", wx.BITMAP_TYPE_ANY ) )
 		self.menuFile.AppendItem( self.mItemLoad )
 		
 		self.mItemSave = wx.MenuItem( self.menuFile, wx.ID_SAVE, u"&Usnimi"+ u"\t" + u"Ctrl+S", wx.EmptyString, wx.ITEM_NORMAL )
+		self.mItemSave.SetBitmap( wx.Bitmap( u"Icons/save.png", wx.BITMAP_TYPE_ANY ) )
 		self.menuFile.AppendItem( self.mItemSave )
 		
 		self.menuFile.AppendSeparator()
 		
 		self.mItemExit = wx.MenuItem( self.menuFile, wx.ID_CLOSE, u"I&zlaz"+ u"\t" + u"Alt+F4", wx.EmptyString, wx.ITEM_NORMAL )
+		self.mItemExit.SetBitmap( wx.Bitmap( u"Icons/on-off.png", wx.BITMAP_TYPE_ANY ) )
 		self.menuFile.AppendItem( self.mItemExit )
 		
 		self.menuMain.Append( self.menuFile, u"&Glavni" ) 
 		
 		self.menuGrade = wx.Menu()
 		self.mItemAvgGrade = wx.MenuItem( self.menuGrade, wx.ID_ANY, u"Ukupan p&rosek", wx.EmptyString, wx.ITEM_NORMAL )
+		self.mItemAvgGrade.SetBitmap( wx.Bitmap( u"Icons/doc_lines_stright.png", wx.BITMAP_TYPE_ANY ) )
 		self.menuGrade.AppendItem( self.mItemAvgGrade )
 		
 		self.menuMain.Append( self.menuGrade, u"&Prosek" ) 
@@ -207,14 +232,10 @@ class MainFrame ( wx.Frame ):
 		
 		# Connect Events
 		self.tabNotebook.Bind( wx.EVT_NOTEBOOK_PAGE_CHANGED, self.tabNotebookOnNotebookPageChanged )
-		self.listGradesFirst.Bind( wx.EVT_LIST_ITEM_DESELECTED, self.ListGradesFirst_OnListItemDeselected )
-		self.listGradesFirst.Bind( wx.EVT_LIST_ITEM_SELECTED, self.ListGradesFirst_OnListItemSelected )
-		self.listGradesSecond.Bind( wx.EVT_LIST_ITEM_DESELECTED, self.ListGradesFirst_OnListItemDeselected )
-		self.listGradesSecond.Bind( wx.EVT_LIST_ITEM_SELECTED, self.ListGradesFirst_OnListItemSelected )
-		self.listGradesThird.Bind( wx.EVT_LIST_ITEM_DESELECTED, self.ListGradesFirst_OnListItemDeselected )
-		self.listGradesThird.Bind( wx.EVT_LIST_ITEM_SELECTED, self.ListGradesFirst_OnListItemSelected )
-		self.listGradesFourth.Bind( wx.EVT_LIST_ITEM_DESELECTED, self.ListGradesFirst_OnListItemDeselected )
-		self.listGradesFourth.Bind( wx.EVT_LIST_ITEM_SELECTED, self.ListGradesFirst_OnListItemSelected )
+		self.listGradesFirst.Bind( wx.EVT_LISTBOX, self.ListGradesFirst_OnListItemSelected )
+		self.listGradesSecond.Bind( wx.EVT_LISTBOX, self.ListGradesFirst_OnListItemSelected )
+		self.listGradesThird.Bind( wx.EVT_LISTBOX, self.ListGradesFirst_OnListItemSelected )
+		self.listGradesFourth.Bind( wx.EVT_LISTBOX, self.ListGradesFirst_OnListItemSelected )
 		self.btnDelete.Bind( wx.EVT_BUTTON, self.btnDelete_OnButtonClick )
 		self.btnCancel.Bind( wx.EVT_BUTTON, self.btnCancel_OnButtonClick )
 		self.btnAdd.Bind( wx.EVT_BUTTON, self.btnAdd_OnButtonClick )
@@ -231,14 +252,8 @@ class MainFrame ( wx.Frame ):
 	def tabNotebookOnNotebookPageChanged( self, event ):
 		event.Skip()
 	
-	def ListGradesFirst_OnListItemDeselected( self, event ):
-		event.Skip()
-	
 	def ListGradesFirst_OnListItemSelected( self, event ):
 		event.Skip()
-	
-	
-	
 	
 	
 	
