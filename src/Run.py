@@ -27,7 +27,8 @@ class GUIOverride(MainFrame):
         self.listGradesThird.Select(-1)
         self.listGradesFourth.Select(-1)
     
-    def btnCancel_OnButtonClick(self, event):        
+    def btnCancel_OnButtonClick(self, event): 
+        self.Updating = False       
         self.ClearFields()
         
     def mItemExit_OnMenuSelection(self, event):
@@ -116,6 +117,7 @@ class GUIOverride(MainFrame):
             self.tabNotebook.GetPage(self.activeYear).GetChildren()[0].Delete(self.selectedItem)
             Delete(it.ExamId)
             self.ClearFields()
+        self.Updating = False
         self.RecalculateAverage()
         
     def RecalculateAverage(self):
