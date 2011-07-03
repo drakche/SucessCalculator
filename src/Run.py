@@ -5,37 +5,26 @@ Created on Jun 28, 2011
 '''
 from GUI_V2 import MainFrame
 import wx
-import sqlite3
+from DTO import Exam
+from DBBroker import Insert,GetAll,Update,Delete
 from wx._misc import DateTime
 
-class Exam(object):    
-    def __init__(self, subject='', grade=0, esbp=0):
-        self.Subject = subject
-        self.Grade = grade
-        self.ESBP = esbp
-        
-    def __repr__(self, *args, **kwargs):
-        return '{0} - {1} ({2})'.format(self.Subject,str(self.Grade),str(self.ESBP))
+
  
-class DBBroker():
-    @staticmethod
-    def Insert(tupleList):
-        conn = sqlite3.connect('Calc.db3')
-        
-        c = conn.cursor()
-        for tuple in tupleList:
-            c.execute('insert into Exam(Name, Grade, ESBP, Year) values(?,?,?,?)',tuple)        
-        conn.commit()
-        c.close()
-        
+
         
 class GUIOverride(MainFrame):
     def __init__(self, parent):
         MainFrame.__init__(self, parent)
-                    
+            
+        self.Updating = False        
         self.activeYear = self.tabNotebook.GetSelection()
         self.selectedItem = -1
-        self.list = [[],[],[],[]]
+        self.list = GetAll()
+        for i in range(0,3):
+            for item in self.list[i]:                            
+                self.tabNotebook.GetPage(i).GetChildren()[0].Append(str(item),item)
+        
         
     def UnselectList(self):
         self.listGradesFirst.Select(-1)
@@ -70,7 +59,7 @@ class GUIOverride(MainFrame):
         ex.Grade = self.spinGrade.Value
         ex.ESBP = 0
         
-        DBBroker.Insert([(ex.Subject,ex.Grade,ex.ESBP,self.activeYear+1)])
+        
         
         exist = False
         
@@ -78,13 +67,24 @@ class GUIOverride(MainFrame):
             if not exist:
                 if e.Subject == ex.Subject:
                     exist = True
-         
-        if not exist:
-            self.list[self.activeYear].append(ex)            
+        if self.Updating:
+            self.tabNotebook.GetPage(self.activeYear).GetChildren()[0].Delete(self.selectedItem)
             self.tabNotebook.GetPage(self.activeYear).GetChildren()[0].Append(str(ex),ex)
-            
+            exOld = self.list[self.activeYear].pop(self.selectedItem)
+            ex.ExamId = exOld.ExamId
+            self.list[self.activeYear].append(ex)
+            Update((ex.ExamId,ex.Subject,ex.Grade,ex.ESBP,ex.Year))
+            self.Updating = False
         else:
-            wx.MessageBox('Uneseni ispit posoji, molimo ispravite','Info')                                
+            if not exist:                
+                self.list[self.activeYear].append(ex)            
+                self.tabNotebook.GetPage(self.activeYear).GetChildren()[0].Append(str(ex),ex)
+                Insert([(ex.Subject,ex.Grade,ex.ESBP,self.activeYear+1)])
+            else:
+                wx.MessageBox('Ispit vec postoji')
+            
+            
+                                            
         
         self.ClearFields()
         
@@ -95,7 +95,8 @@ class GUIOverride(MainFrame):
         item = self.list[self.activeYear][self.selectedItem]
         self.txtSubject.Value = item.Subject
         self.spinGrade.Value = item.Grade
-        self.datDatum.Value = item.Date 
+        #TODO: insert esbp here
+        self.Updating = True
         self.btnDelete.Enable()
         
     def btnDelete_OnButtonClick(self, event):
@@ -103,8 +104,9 @@ class GUIOverride(MainFrame):
                   'Info',   
                   wx.YES_NO|wx.NO_DEFAULT|wx.ICON_QUESTION).ShowModal()
         if res == wx.ID_YES:
-            self.list[self.activeYear].pop(self.selectedItem)
+            it = self.list[self.activeYear].pop(self.selectedItem)
             self.tabNotebook.GetPage(self.activeYear).GetChildren()[0].Delete(self.selectedItem)
+            Delete(it.ExamId)
             self.ClearFields()
         
         
